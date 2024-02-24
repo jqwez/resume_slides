@@ -1,12 +1,12 @@
 import './App.css'
-import SlideButton from '../components/SlideButton'
+import SlideShow from "../components/SlideShow"
 
 function App() {
 
   return (
     <>
-    <SlideButton direction={true} />
-    </>
+    <SlideShow/>
+  </>
   )
 }
 

@@ -1,14 +1,19 @@
 import "./SlideButton.css"
 
+export enum ButtonDirection {
+  LEFT,
+  RIGHT
+}
+
 type SlideButtonProps = {
-  direction: boolean;
+  direction: ButtonDirection;
+  action: () => void;
 }
 
 function SlideButton(props: SlideButtonProps) {
-  const direction = props.direction ? 'left' : 'right';
-
+  const direction = props.direction == ButtonDirection.LEFT ? '🢀' : '🢂';
   return (
-    <div class="_slide-button">
+    <div class="_slide-button" onClick={props.action}>
     <p>
       {direction}
       </p> 

@@ -1,4 +1,16 @@
 ._slide-button {
-  color: red;
+  color: cyan;
   user-select: none;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+._slide-button:hover {
+  color: orange;
+  transform: scale(115%);
+}
+
+._slide-button:active {
+  color: darkorange;
+  transform: scale(95%);
 }

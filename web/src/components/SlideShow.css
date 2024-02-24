@@ -1,0 +1,15 @@
+._slideshow {
+  display: flex;
+  flex-direction: column;
+}
+
+._slide-button-div {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+._slide {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 10px rgba(0, 0, 0, 0.5);
+}

@@ -1,21 +1,18 @@
 package main
 
 import (
-	"fmt"
+	"log"
 	"net/http"
-	"github.com/gorilla/websocket"
-
-	"main/routes"
+	"main/router"
+	"main/controller"
+	"main/model"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize: 1024,
-	WriteBufferSize: 1024,
-}
-
 func main() {
-	fmt.Println("Go")
-	routes.RegisterRoutes()
+	db := database.DatabaseConnection()
+	model.Migrate(db)
+	router.RegisterRoutes()
 	port := ":8000"
+	log.Println("Listening on port", port)
 	http.ListenAndServe(port, nil)
 }
