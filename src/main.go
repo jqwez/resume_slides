@@ -9,7 +9,14 @@ import (
 )
 
 func main() {
-	db := database.DatabaseConnection()
+	db := controller.GetDatabaseConnection()
+	client, err := controller.GetContainerConnection()
+	if err != nil {
+		log.Fatal("could not establish container connection")
+	}
+	controller.SaveBlob(client)
+
+	log.Println("ContainerClient", client)
 	model.Migrate(db)
 	router.RegisterRoutes()
 	port := ":8000"
