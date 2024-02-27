@@ -3,4 +3,4 @@ resume-slides
 *.pem
 __*
 .vscode
-./static
+static

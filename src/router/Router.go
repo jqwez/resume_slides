@@ -4,14 +4,20 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"io"
 	"os"
+	"bytes"
+
+	"main/controller"
 )
 
 var StaticDir = staticLocationFinder()
+var clientConn, err = controller.GetContainerConnection()
 
 func RegisterRoutes() {
 	http.HandleFunc("/", ServeHome)
 	http.HandleFunc("/ws", SocketHandler)
+	http.HandleFunc("/blob", ServeImageBlob)
 	ServeStatic()
 }
 
@@ -26,6 +32,21 @@ func ServeHome(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.ServeFile(w, r, fmt.Sprintf("%s/index.html", StaticDir))
+}
+
+func ServeImageBlob(w http.ResponseWriter, r *http.Request) {
+	blob, err := controller.GetBlobByName(clientConn, "random")
+	if err != nil {
+		http.Error(w, "Error getting blob", http.StatusInternalServerError)	
+		return
+	}
+	reader := bytes.NewReader(blob)
+	w.Header().Set("Content-Type", "text/plain")
+	_, err = io.Copy(w, reader)
+	if err != nil {
+		http.Error(w, "Error serving image", http.StatusInternalServerError)
+		return
+	}
 }
 
 func ServeStatic() {
