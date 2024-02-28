@@ -1,18 +1,18 @@
 package router
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"net/http"
-	"io"
 	"os"
-	"bytes"
 
 	"main/controller"
 )
 
 var StaticDir = staticLocationFinder()
-var clientConn, err = controller.GetContainerConnection()
+var clientConn, _ = controller.GetContainerConnection()
 
 func RegisterRoutes() {
 	http.HandleFunc("/", ServeHome)
@@ -35,13 +35,16 @@ func ServeHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeImageBlob(w http.ResponseWriter, r *http.Request) {
-	blob, err := controller.GetBlobByName(clientConn, "random")
+	blob, err := controller.GetBlobByName(clientConn, "cat.jpg")
 	if err != nil {
-		http.Error(w, "Error getting blob", http.StatusInternalServerError)	
+		http.Error(w, "Error getting blob", http.StatusInternalServerError)
 		return
 	}
 	reader := bytes.NewReader(blob)
-	w.Header().Set("Content-Type", "text/plain")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Content-Type", "image/jpg")
+	w.Header().Set("Content-Disposition", "inline; filename=kitty.jpg")
 	_, err = io.Copy(w, reader)
 	if err != nil {
 		http.Error(w, "Error serving image", http.StatusInternalServerError)

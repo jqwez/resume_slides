@@ -62,6 +62,25 @@ func GetContainerConnection() (*azblob.Client, error) {
 	return ContainerConnection(AzureBlogConfigFromEnv())
 }
 
+func SaveCat(client *azblob.Client) (string, error) {
+	blob, err := os.Open("../static/cat.jpg")
+	if err != nil {
+		log.Fatal("did not find cat")
+	}
+	blobName := "cat.jpg"
+	resp, err := client.UploadStream(
+		context.TODO(),
+		"",
+		blobName,
+		blob,
+		&azblob.UploadStreamOptions{
+			Metadata: map[string]*string{"cat": to.Ptr("true")},
+		})
+	handleError(err)
+	log.Println(resp)
+	return blobName, nil
+}
+
 func SaveBlob(client *azblob.Client) (string, error) {
 	bufferSize := 8 * 1024 * 1024
 	blobName := "random" // will be random

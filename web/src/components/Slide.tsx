@@ -9,14 +9,13 @@ type SlideProps = {
 function Slide(props: SlideProps) {
   const [imageSrc, setImageSrc] = createSignal<string>("")
   const getCat = async () => {
-    const req = await fetch("https://api.thecatapi.com/v1/images/search?size=med&mime_types=jpg&format=json&has_breeds=true&order=RANDOM&page=0&limit=1",
+    const req = await fetch("http://localhost:8000/blob",
     {
       method: "GET",
       redirect: "follow"
     });
-    const catSon = await req.json()
-    const url = catSon[0]["url"]
-    setImageSrc(url)
+    const blob = await req.blob()
+    setImageSrc(URL.createObjectURL(blob))
   }
   
   onMount(()=> {
