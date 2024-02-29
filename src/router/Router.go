@@ -2,6 +2,7 @@ package router
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -9,6 +10,7 @@ import (
 	"os"
 
 	"main/controller"
+	"main/model"
 )
 
 var StaticDir = staticLocationFinder()
@@ -17,7 +19,8 @@ var clientConn, _ = controller.GetContainerConnection()
 func RegisterRoutes() {
 	http.HandleFunc("/", ServeHome)
 	http.HandleFunc("/ws", SocketHandler)
-	http.HandleFunc("/blob", ServeImageBlob)
+	http.HandleFunc("/blob/{blobName}", ServeImageBlob)
+	http.HandleFunc("/slideshow/{SlideShowId}", ServeSlideShowData)
 	ServeStatic()
 }
 
@@ -35,7 +38,8 @@ func ServeHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func ServeImageBlob(w http.ResponseWriter, r *http.Request) {
-	blob, err := controller.GetBlobByName(clientConn, "cat.jpg")
+	blobName := r.PathValue("blobName")
+	blob, err := controller.GetBlobByName(clientConn, blobName)
 	if err != nil {
 		http.Error(w, "Error getting blob", http.StatusInternalServerError)
 		return
@@ -44,7 +48,7 @@ func ServeImageBlob(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Content-Type", "image/jpg")
-	w.Header().Set("Content-Disposition", "inline; filename=kitty.jpg")
+	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=%s", blobName))
 	_, err = io.Copy(w, reader)
 	if err != nil {
 		http.Error(w, "Error serving image", http.StatusInternalServerError)
@@ -77,4 +81,40 @@ func staticLocationFinder() string {
 	}
 	log.Fatal("no static dir found")
 	return ""
+}
+
+func ServeSlideShowData(w http.ResponseWriter, r *http.Request) {
+	SlideShowId := r.PathValue("SlideShowId")
+	log.Println(SlideShowId)
+
+	type SlideShowData struct {
+		*model.SlideShow
+		Slides [10]*model.Slide
+	}
+	slideshow := model.NewSlideShow()
+	slideshow.ID = 1
+	slideshow.Title = "test show"
+
+	slide := model.NewSlide()
+	slide.ID = 3
+	slide.Title = "test slide"
+	slide.Url = "http://localhost:8000/cat.jpg"
+	slide.SlideShowId = 1
+	slide.Position = 0
+
+	ssd := &SlideShowData{
+		SlideShow: slideshow,
+	}
+	ssd.Slides[0] = slide
+
+	jsonData, err := json.Marshal(ssd)
+	if err != nil {
+		http.Error(w, "Error Serving SlideShow", http.StatusInternalServerError)
+		return
+	}
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(jsonData)
+
 }

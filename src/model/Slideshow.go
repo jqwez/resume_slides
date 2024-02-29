@@ -11,8 +11,20 @@ type SlideShow struct {
 	CreatedAt		time.Time	`json:"created_at" db:"created_at"`	
 }
 
+type SlideShowData struct {
+	*SlideShow
+	Slides []*Slide
+}
+
 func NewSlideShow() *SlideShow {
 	return &SlideShow{}
+}
+
+func NewSlideShowData(ss *SlideShow, sls []*Slide) *SlideShowData {
+	return &SlideShowData{
+		SlideShow: ss,
+		Slides: sls,
+	}
 }
 
 func (s *SlideShow) Migrate(db *sql.DB) error {

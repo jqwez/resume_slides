@@ -65,7 +65,10 @@ func GetContainerConnection() (*azblob.Client, error) {
 func SaveCat(client *azblob.Client) (string, error) {
 	blob, err := os.Open("../static/cat.jpg")
 	if err != nil {
-		log.Fatal("did not find cat")
+		blob, err = os.Open("../../static/cat.jpg")
+	}
+	if err != nil {
+		log.Fatal("no cat found to upload")
 	}
 	blobName := "cat.jpg"
 	resp, err := client.UploadStream(

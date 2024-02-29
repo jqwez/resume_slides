@@ -1,17 +1,17 @@
 package model
 
 import (
-	"time"
 	"database/sql"
+	"time"
 )
 
 type Slide struct {
-	ID					int				`json:"id" db: "id"`
-	Title				string		`json:"title" db: "title"`
-	Url					string		`json:"url" db: "url"`
-	CreatedAt		time.Time	`json:"created_at" db:"created_at"`	
-	Slideshow		int				`json:"slideshow_id" db:"slideshow_id"`
-	Position		int				`json:"position" db: "position"`
+	ID          int       `json:"id" db: "id"`
+	Title       string    `json:"title" db: "title"`
+	Url         string    `json:"url" db: "url"`
+	CreatedAt   time.Time `json:"created_at" db:"created_at"`
+	SlideShowId int       `json:"slideshow_id" db:"slideshow_id"`
+	Position    int       `json:"position" db: "position"`
 }
 
 func NewSlide() *Slide {
