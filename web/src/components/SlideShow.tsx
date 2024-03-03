@@ -1,4 +1,4 @@
-import { JSXElement, createEffect, createSignal, onCleanup, onMount } from 'solid-js'
+import { JSXElement, createSignal, onCleanup, onMount } from 'solid-js'
 import './SlideShow.css'
 import SlideButton, { ButtonDirection } from './SlideButton'
 import Slide, { SlideType } from './Slide'
