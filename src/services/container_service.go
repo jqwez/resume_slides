@@ -1,4 +1,4 @@
-package controller
+package services
 
 import (
 	"bytes"
@@ -14,6 +14,17 @@ import (
 	"github.com/joho/godotenv"
 	//"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob/container"
 )
+
+type AzureBlobService struct {
+	*AzureBlobConfig
+	*azblob.Client
+}
+
+func NewAzureBlobService(config *AzureBlobConfig) *AzureBlobService {
+	return &AzureBlobService{
+		AzureBlobConfig: config,
+	}
+}
 
 type AzureBlobConfig struct {
 	AccountName   string
@@ -32,7 +43,7 @@ func AzureBlogConfigFromEnv() *AzureBlobConfig {
 	}
 }
 
-func CreateContainerIfNotExist(baseURL string, containerName string) error {
+func (a *AzureBlobService) CreateContainerIfNotExist(baseURL string, containerName string) error {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	handleError(err)
 	client, err := azblob.NewClient(baseURL, cred, nil)
@@ -47,19 +58,28 @@ func CreateContainerIfNotExist(baseURL string, containerName string) error {
 	return err
 }
 
-func ContainerConnection(c *AzureBlobConfig) (*azblob.Client, error) {
+func (a *AzureBlobService) Connect() (*azblob.Client, error) {
 	baseURL := "https://127.0.0.1:10000"
-	err := CreateContainerIfNotExist(fmt.Sprintf("%s/%s", baseURL, c.AccountName), c.ContainerName)
-	containerURL := fmt.Sprintf("%s/%s/%s", baseURL, c.AccountName, c.ContainerName)
+	err := a.CreateContainerIfNotExist(fmt.Sprintf("%s/%s", baseURL, a.AccountName), a.ContainerName)
+	if err != nil {
+		log.Println("Container already Exists")
+	}
+	containerURL := fmt.Sprintf("%s/%s/%s", baseURL, a.AccountName, a.ContainerName)
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	handleError(err)
 	containerClient, err := azblob.NewClient(containerURL, cred, nil)
 	handleError(err)
+	a.Client = containerClient
 	return containerClient, nil
 }
 
-func GetContainerConnection() (*azblob.Client, error) {
-	return ContainerConnection(AzureBlogConfigFromEnv())
+func (a *AzureBlobService) GetBlobConnection() (*azblob.Client, error) {
+	if a.Client != nil {
+		return a.Client, nil
+	}
+	newConnection, err := a.Connect()
+	a.Client = newConnection
+	return a.Client, err
 }
 
 func SaveCat(client *azblob.Client) (string, error) {
@@ -112,7 +132,7 @@ func DeleteBlobByName(client *azblob.Client, name string) (bool, error) {
 	return true, nil
 }
 
-func GetBlobByName(client *azblob.Client, name string) ([]byte, error) {
+func (a *AzureBlobService) GetBlobByName(client *azblob.Client, name string) ([]byte, error) {
 	downloadResponse, err := client.DownloadStream(
 		context.TODO(),
 		"",

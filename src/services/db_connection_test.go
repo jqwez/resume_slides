@@ -1,7 +1,8 @@
-package controller
+package services
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 

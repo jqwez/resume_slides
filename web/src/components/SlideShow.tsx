@@ -8,7 +8,7 @@ type SlideShowData = {
   id: number,
   title: string,
   created_at: string,
-  Slides: SlideType[]
+  slides: SlideType[]
 }
 
 function SlideShow() {
@@ -22,7 +22,7 @@ function SlideShow() {
     const data = await res.json()
     setSlideShowData(data);
     console.log(data)
-    console.log(data.Slides)
+    console.log(data.slides)
   }
   onMount(()=>{
     getSlideShowData()

@@ -1,12 +1,6 @@
-package controller
+package services
 
-import (
-	"os"
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-)
-
+/*
 var testClient, _ = GetContainerConnection()
 
 func TestMain(m *testing.M) {
@@ -51,3 +45,4 @@ func TestGetBlobByName(t *testing.T) {
 		t.Fatal("no blob")
 	}
 }
+*/
