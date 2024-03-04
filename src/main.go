@@ -7,5 +7,6 @@ import (
 func main() {
 
 	server := controller.NewServer()
+
 	server.Run()
 }

@@ -1,8 +1,7 @@
 import { createSignal,  onMount } from 'solid-js'
 import './SlideShow.css'
 
-
-export type SlideType = {
+export type SlideData = {
   id: number,
   title: string,
   url: string,
@@ -12,22 +11,22 @@ export type SlideType = {
 }
 
 type SlideProps = {
-  blobURL: string,
-  num: any;
+  SlideData: SlideData;
 }
 
 function Slide(props: SlideProps) {
+  const url = `http://127.0.0.1:8000/blob/${props.SlideData.url}`
+  console.log('hello')
   const [imageSrc, setImageSrc] = createSignal<string>("")
   const getCat = async () => {
-    const req = await fetch(props.blobURL,
+    const req = await fetch(url,
     {
       method: "GET",
-      redirect: "follow"
+      redirect: "follow",
     });
     const blob = await req.blob()
     setImageSrc(URL.createObjectURL(blob))
   }
-  
   onMount(()=> {
     getCat();
   });

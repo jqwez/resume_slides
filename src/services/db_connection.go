@@ -23,6 +23,10 @@ func NewAzureSQLService(config *AzureSQLConfig) *AzureSQLService {
 	return service
 }
 
+func (a *AzureSQLService) GetConnection() *sql.DB {
+	return a.conn
+}
+
 type AzureSQLConfig struct {
 	Database string
 	Password string
@@ -57,7 +61,3 @@ func (s *AzureSQLService) Connect() *sql.DB {
 	log.Println("Connected to MSSQL at", s.Server)
 	return db
 }
-
-//func GetDatabaseConnection() *sql.DB {
-//return Connection(AzureSQLConfigFromEnv(true))
-//}

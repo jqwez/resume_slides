@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"main/model"
 	"main/services"
 	"net/http"
 	"os"
@@ -78,25 +77,8 @@ func (r *Router) HandleGetSlideShowData(w http.ResponseWriter, req *http.Request
 	SlideShowId := req.PathValue("SlideShowId")
 	log.Println("Fetching slideshow: ", SlideShowId)
 
-	type SlideShowData struct {
-		*model.SlideShow
-		Slides [10]*model.Slide
-	}
-	slideshow := model.NewSlideShow()
-	slideshow.ID = 1
-	slideshow.Title = "test show"
-
-	slide := model.NewSlide()
-	slide.ID = 3
-	slide.Title = "test slide"
-	slide.Url = "http://localhost:8000/cat.jpg"
-	slide.SlideShowId = 1
-	slide.Position = 0
-
-	ssd := &SlideShowData{
-		SlideShow: slideshow,
-	}
-	ssd.Slides[0] = slide
+	slideshow_service := services.SlideShowService{r.AzureSQLService}
+	ssd, err := slideshow_service.GetByID(1)
 
 	jsonData, err := json.Marshal(ssd)
 	if err != nil {
