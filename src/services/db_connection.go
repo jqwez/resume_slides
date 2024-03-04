@@ -10,6 +10,19 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type AzureSQLService struct {
+	*AzureSQLConfig
+	conn *sql.DB
+}
+
+func NewAzureSQLService(config *AzureSQLConfig) *AzureSQLService {
+	service := &AzureSQLService{
+		AzureSQLConfig: config,
+	}
+	service.conn = service.Connect()
+	return service
+}
+
 type AzureSQLConfig struct {
 	Database string
 	Password string
@@ -17,7 +30,7 @@ type AzureSQLConfig struct {
 	Server   string
 }
 
-func AzureSQLConfigFromEnv(prod bool) *AzureSQLConfig {
+func AzureSQLConfigFromEnv() *AzureSQLConfig {
 	if err := godotenv.Load(); err != nil {
 		if err := godotenv.Load("../.env"); err != nil {
 			log.Fatal("error loading .env file")
@@ -31,8 +44,8 @@ func AzureSQLConfigFromEnv(prod bool) *AzureSQLConfig {
 	}
 }
 
-func DatabaseConnection(c *AzureSQLConfig) *sql.DB {
-	connectionString := fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s", c.Server, c.User, c.Password, c.Database)
+func (s *AzureSQLService) Connect() *sql.DB {
+	connectionString := fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s", s.Server, s.User, s.Password, s.Database)
 	db, err := sql.Open("sqlserver", connectionString)
 	if err != nil {
 		log.Fatal(err)
@@ -41,10 +54,10 @@ func DatabaseConnection(c *AzureSQLConfig) *sql.DB {
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("Connected to MSSQL at", c.Server)
+	log.Println("Connected to MSSQL at", s.Server)
 	return db
 }
 
-func GetDatabaseConnection() *sql.DB {
-	return DatabaseConnection(AzureSQLConfigFromEnv(true))
-}
+//func GetDatabaseConnection() *sql.DB {
+//return Connection(AzureSQLConfigFromEnv(true))
+//}

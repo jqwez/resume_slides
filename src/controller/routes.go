@@ -14,12 +14,14 @@ import (
 
 type Router struct {
 	*services.AzureBlobService
+	*services.AzureSQLService
 	staticDir string
 }
 
 func NewRouter() *Router {
 	router := &Router{
 		AzureBlobService: services.NewAzureBlobService(services.AzureBlogConfigFromEnv()),
+		AzureSQLService:  services.NewAzureSQLService(services.AzureSQLConfigFromEnv()),
 		staticDir:        staticLocationFinder(),
 	}
 	router.RegisterRoutes()
