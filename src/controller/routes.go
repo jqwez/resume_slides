@@ -32,6 +32,7 @@ func (r *Router) RegisterRoutes() {
 	http.HandleFunc("/ws", HandleSocket)
 	http.HandleFunc("/blob/{blobName}", r.HandleImageBlob)
 	http.HandleFunc("/slideshow/{SlideShowId}", r.HandleGetSlideShowData)
+	http.HandleFunc("/newslideshow", r.HandleNewSlideShow)
 	r.ServeStatic()
 }
 
@@ -77,8 +78,11 @@ func (r *Router) HandleGetSlideShowData(w http.ResponseWriter, req *http.Request
 	SlideShowId := req.PathValue("SlideShowId")
 	log.Println("Fetching slideshow: ", SlideShowId)
 
-	slideshow_service := services.SlideShowService{r.AzureSQLService}
+	slideshow_service := services.SlideShowService{AzureSQLService: r.AzureSQLService}
 	ssd, err := slideshow_service.GetByID(1)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	jsonData, err := json.Marshal(ssd)
 	if err != nil {
@@ -89,6 +93,13 @@ func (r *Router) HandleGetSlideShowData(w http.ResponseWriter, req *http.Request
 	w.Header().Set("Access-Control-Allow-Methods", "GET")
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonData)
+}
+
+func (r *Router) HandleNewSlideShow(w http.ResponseWriter, req *http.Request) {
+	log.Println(req.Header)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Content-Type", "application/json")
 }
 
 func staticLocationFinder() string {

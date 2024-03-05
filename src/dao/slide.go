@@ -8,9 +8,9 @@ import (
 )
 
 type Slide struct {
-	ID        int       `json:"id" db: "id"`
-	Title     string    `json:"title" db: "title"`
-	Url       string    `json:"url" db: "url"`
+	ID        int       `json:"id" db:"id"`
+	Title     string    `json:"title" db:"title"`
+	Url       string    `json:"url" db:"url"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
 }
 

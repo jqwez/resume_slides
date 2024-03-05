@@ -68,7 +68,6 @@ func (a *AzureBlobService) CreateContainerIfNotExist(baseURL string, containerNa
 		&azblob.CreateContainerOptions{
 			Metadata: map[string]*string{"hello": to.Ptr("world")},
 		})
-	//log.Println(err)
 	return err
 }
 

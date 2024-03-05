@@ -6,9 +6,9 @@ import (
 )
 
 type SlidePosition struct {
-	SlideShowID int `json:"slideshow_id" db: "slideshow_id"`
-	SlideID     int `json:"slide_id" db: "slide_id"`
-	Position    int `json:"position" db: "position"`
+	SlideShowID int `json:"slideshow_id" db:"slideshow_id"`
+	SlideID     int `json:"slide_id" db:"slide_id"`
+	Position    int `json:"position" db:"position"`
 }
 
 func NewSlidePosition(showID int, slideID int, position int) *SlidePosition {

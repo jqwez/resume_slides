@@ -1,0 +1,16 @@
+#_new-slideshow-form {
+  display: flex;
+  flex-direction: column;
+}
+
+#_new-slideshow-form #submit-button {
+  margin-top: 10px;
+}
+
+label {
+  user-select: none;
+}
+
+#slide-title {
+  margin-bottom: 10px;
+}

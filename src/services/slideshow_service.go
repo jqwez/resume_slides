@@ -7,8 +7,8 @@ import (
 )
 
 type SlideWithPosition struct {
-	*dao.Slide `json: "slide"`
-	Position   int `json: "position"`
+	*dao.Slide `json:"slide"`
+	Position   int `json:"position"`
 }
 
 func NewSlideWithPosition(slide *dao.Slide, pos int) *SlideWithPosition {
@@ -16,8 +16,8 @@ func NewSlideWithPosition(slide *dao.Slide, pos int) *SlideWithPosition {
 }
 
 type SlideShowData struct {
-	*dao.SlideShow      `json: "slideshow_data"`
-	SlidesWithPositions []*SlideWithPosition `json: "slides"`
+	*dao.SlideShow      `json:"slideshow_data"`
+	SlidesWithPositions []*SlideWithPosition `json:"slides"`
 }
 
 func NewSlideShowData(slideshow *dao.SlideShow, slides []*SlideWithPosition) *SlideShowData {
