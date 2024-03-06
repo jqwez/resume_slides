@@ -1,4 +1,4 @@
-import { createResource, createSignal,  onMount } from 'solid-js'
+import { Suspense, createResource, createSignal,  onMount } from 'solid-js'
 import './Slide.css'
 
 export type SlideData = {
@@ -31,9 +31,9 @@ function Slide(props: SlideProps) {
 
   return (
     <div class="_slide-div">
-      {slide.loading ? 
-     <div class="slide-placeholder">Loading...</div> :
-    <img class="_slide" src={slide()} height="400" width="600"/> }
+    <Suspense fallback={<div class="slide-placeholder">Loading...</div>}>
+    <img class="_slide" src={slide()} height="400" width="600"/> 
+    </Suspense>
     </div>
   )
 }

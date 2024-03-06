@@ -1,4 +1,4 @@
-package services
+package storage
 
 import (
 	"bytes"
@@ -91,11 +91,9 @@ func (a *AzureBlobService) GetBlobConnection() (*azblob.Client, error) {
 	return a.Client, err
 }
 
-func (a *AzureBlobService) SaveBlob() (string, error) {
-	bufferSize := 8 * 1024 * 1024
+func (a *AzureBlobService) SaveBlob(file []byte) (string, error) {
 	blobName := "random" // will be random
-	blobData := make([]byte, bufferSize)
-	blobContentReader := bytes.NewReader(blobData)
+	blobContentReader := bytes.NewReader(file)
 
 	resp, err := a.Client.UploadStream(
 		context.TODO(),
@@ -142,6 +140,7 @@ func handleError(err error) {
 	}
 }
 
+/*
 func SaveCat(client *azblob.Client) (string, error) {
 	blob, err := os.Open("../static/cat.jpg")
 	if err != nil {
@@ -163,3 +162,4 @@ func SaveCat(client *azblob.Client) (string, error) {
 	log.Println(resp)
 	return blobName, nil
 }
+*/

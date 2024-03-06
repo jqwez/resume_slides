@@ -16,8 +16,8 @@ type SlideShowData struct {
 	Slides []*Slide
 }
 
-func NewSlideShow() *SlideShow {
-	return &SlideShow{}
+func NewSlideShow(title string) *SlideShow {
+	return &SlideShow{Title: title}
 }
 
 func NewSlideShowData(ss *SlideShow, sls []*Slide) *SlideShowData {

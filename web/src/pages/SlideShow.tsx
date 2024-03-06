@@ -10,7 +10,7 @@ type SlideShowProps = {
   navigate: Navigator
 }
 
-type SlideShowData = {
+export type SlideShowData = {
   slideshow_data: {
     id: number,
     title: string,

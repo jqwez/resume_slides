@@ -1,4 +1,4 @@
-package services
+package database
 
 import (
 	"database/sql"
@@ -19,11 +19,15 @@ func NewAzureSQLService(config *AzureSQLConfig) *AzureSQLService {
 	service := &AzureSQLService{
 		AzureSQLConfig: config,
 	}
-	service.conn = service.Connect()
+	service.conn = service.connect()
 	return service
 }
 
 func (a *AzureSQLService) GetConnection() *sql.DB {
+	err := a.conn.Ping()
+	if err != nil {
+		a.conn = a.connect()
+	}
 	return a.conn
 }
 
@@ -34,7 +38,7 @@ type AzureSQLConfig struct {
 	Server   string
 }
 
-func AzureSQLConfigFromEnv() *AzureSQLConfig {
+func MustAzureSQLConfigFromEnv() *AzureSQLConfig {
 	if err := godotenv.Load(); err != nil {
 		if err := godotenv.Load("../.env"); err != nil {
 			log.Fatal("error loading .env file")
@@ -48,7 +52,7 @@ func AzureSQLConfigFromEnv() *AzureSQLConfig {
 	}
 }
 
-func (s *AzureSQLService) Connect() *sql.DB {
+func (s *AzureSQLService) connect() *sql.DB {
 	connectionString := fmt.Sprintf("server=%s;user id=%s;password=%s;database=%s", s.Server, s.User, s.Password, s.Database)
 	db, err := sql.Open("sqlserver", connectionString)
 	if err != nil {

@@ -1,9 +1,9 @@
 import './App.css'
 import SlideShow from "./pages/SlideShow"
+import Admin from "./pages/Admin";
 import NewSlideShow from './pages/NewSlideShow';
-import Admin from "./pages/Admin"
-import { JSXElement, createSignal, onMount } from 'solid-js';
 import SlideShows from './pages/SlideShows';
+import { JSXElement, createSignal, onMount } from 'solid-js';
 import { useStoredPage } from './hooks/useStoredPage';
 
 
