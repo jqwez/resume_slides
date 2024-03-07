@@ -13,8 +13,8 @@ type Server struct {
 }
 
 func NewServer() *Server {
-	dbService := database.NewAzureSQLService(database.AzureSQLConfigFromEnv())
-	blobService := storage.NewAzureBlobService(storage.AzureBlogConfigFromEnv())
+	dbService := database.NewAzureSQLService(database.MustAzureSQLConfigFromEnv())
+	blobService := storage.MustNewAzureBlobService(storage.MustAzureBlogConfigFromEnv())
 	return &Server{
 		Router: NewRouter(dbService, blobService),
 		port:   ":8000",

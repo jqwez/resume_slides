@@ -1,24 +1,26 @@
 package storage
 
+import "github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
+
 type StorageService interface {
-	//Connector
-	//Gettor
-	//Saver
-	//Deleter
+	Connector
+	Gettor
+	Saver
+	Deleter
 }
 
 type Connector interface {
-	GetConnection()
+	GetConnection() (*azblob.Client, error)
 }
 
 type Gettor interface {
-	GetBlob(name string)
+	GetBlob(name string) ([]byte, error)
 }
 
 type Saver interface {
-	SaveBlob(file []byte)
+	SaveBlob(file []byte) (string, error)
 }
 
 type Deleter interface {
-	DeleteBlob(name string)
+	DeleteBlob(name string) (bool, error)
 }

@@ -1,29 +1,18 @@
 package slideshow
 
 import (
-	"log"
 	"main/dao"
 	"main/services/database"
 	"main/services/storage"
-	"time"
 )
 
-type SlideWithPosition struct {
-	*dao.Slide `json:"slide"`
-	Position   int `json:"position"`
+type SlideShowDTO struct {
+	SlideShow *dao.SlideShow `json:"slideshow_data"`
+	Slides    []*dao.Slide   `json:"slides"`
 }
 
-func NewSlideWithPosition(slide *dao.Slide, pos int) *SlideWithPosition {
-	return &SlideWithPosition{Slide: slide, Position: pos}
-}
-
-type SlideShowData struct {
-	*dao.SlideShow      `json:"slideshow_data"`
-	SlidesWithPositions []*SlideWithPosition `json:"slides"`
-}
-
-func NewSlideShowData(slideshow *dao.SlideShow, slides []*SlideWithPosition) *SlideShowData {
-	return &SlideShowData{SlideShow: slideshow, SlidesWithPositions: slides}
+func NewSlideShowDTO(sw *dao.SlideShow, sl []*dao.Slide) *SlideShowDTO {
+	return &SlideShowDTO{SlideShow: sw, Slides: sl}
 }
 
 type SlideShowService struct {
@@ -38,24 +27,32 @@ func NewSlideShowService(db database.DBService, store storage.StorageService) *S
 	}
 }
 
-func (s *SlideShowService) GetShowById(id int) (*SlideShowData, error) {
-	log.Println(id)
-	show := dao.NewSlideShow("test")
-	show.ID = 1
-	show.Title = "Hello"
-	show.CreatedAt = time.Now()
-	slide := dao.NewSlide("test-slide", "cat.jpg")
-	_slides := []*dao.Slide{slide, slide}
-	slides := []*SlideWithPosition{NewSlideWithPosition(_slides[0], 1)}
-	return NewSlideShowData(show, slides), nil
+func (s *SlideShowService) GetShowById(id int) (SlideShowDTO, error) {
+	return SlideShowDTO{}, nil
 }
 
-func (s *SlideShowService) GetSlideById(id int) (*dao.Slide, error) {
-	return &dao.Slide{}, nil
+func (s *SlideShowService) GetSlideById(id int) (dao.Slide, error) {
+	sl := dao.Slide{}
+	slide, err := sl.GetById(s.Database.GetConnection(), id)
+	if err != nil {
+		return slide, err
+	}
+	return slide, nil
 }
 
-func (s *SlideShowService) SaveNewSlide(title string, slide []byte) error {
-	return nil
+func (s *SlideShowService) SaveNewSlide(title string, file []byte) (dao.Slide, error) {
+	sl := dao.Slide{Title: title}
+	url, err := s.Storage.SaveBlob(file)
+	if err != nil {
+		return dao.Slide{}, err
+	}
+	sl.Url = url
+	sl, err = sl.Save(s.Database.GetConnection())
+	if err != nil {
+		s.Storage.DeleteBlob(url)
+		return dao.Slide{}, err
+	}
+	return sl, nil
 }
 
 func (s *SlideShowService) SaveNewSlideShow(showTitle string, slideTitle string, slide []byte) error {

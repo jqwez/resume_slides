@@ -12,6 +12,7 @@ type Slide struct {
 	Title     string    `json:"title" db:"title"`
 	Url       string    `json:"url" db:"url"`
 	CreatedAt time.Time `json:"created_at" db:"created_at"`
+	Position  int       `json:"position" db:"-"`
 }
 
 func NewSlide(title string, url string) *Slide {
@@ -67,24 +68,23 @@ func (s *Slide) GetAll(db *sql.DB) ([]Slide, error) {
 }
 
 func (s *Slide) GetById(db *sql.DB, id int) (Slide, error) {
-	sql := "SELECT * FROM slides WHERE id=?"
-	row := db.QueryRow(sql, id)
-	return NewSlideFromRow(row)
+	query := "SELECT * FROM slides WHERE id=@Id"
+	result := db.QueryRow(query,
+		sql.Named("Id", id),
+	)
+	return NewSlideFromRow(result)
 }
 
-func (s *Slide) Save(db *sql.DB) error {
+func (s *Slide) Save(db *sql.DB) (Slide, error) {
+	s.CreatedAt = time.Now()
 	query := `
 	INSERT INTO slides (title, url, created_at)
 	VALUES (@Title, @Url, @CreatedAt)`
 	s.CreatedAt = time.Now()
-	_, err := db.Exec(query,
+	result := db.QueryRow(query,
 		sql.Named("Title", s.Title),
 		sql.Named("Url", s.Url),
 		sql.Named("CreatedAt", s.CreatedAt),
 	)
-
-	if err != nil {
-		return err
-	}
-	return nil
+	return NewSlideFromRow(result)
 }
