@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"io"
 	"log"
-	"main/services/database"
-	"main/services/slideshow"
-	"main/services/storage"
 	"net/http"
 	"os"
+
+	"github.com/jqwez/resume_slides/services/database"
+	"github.com/jqwez/resume_slides/services/slideshow"
+	"github.com/jqwez/resume_slides/services/storage"
 )
 
 type Router struct {

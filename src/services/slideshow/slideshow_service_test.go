@@ -3,10 +3,11 @@ package slideshow
 import (
 	"database/sql"
 	"errors"
-	"main/services/database"
-	"main/services/storage"
 	"os"
 	"testing"
+
+	"github.com/jqwez/resume_slides/services/database"
+	"github.com/jqwez/resume_slides/services/storage"
 )
 
 var dbService database.DBService

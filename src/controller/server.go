@@ -2,9 +2,10 @@ package controller
 
 import (
 	"log"
-	"main/services/database"
-	"main/services/storage"
 	"net/http"
+
+	"github.com/jqwez/resume_slides/services/database"
+	"github.com/jqwez/resume_slides/services/storage"
 )
 
 type Server struct {

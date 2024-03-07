@@ -1,9 +1,9 @@
 package main
 
 import (
-	"main/controller"
-	"main/dao"
-	"main/services/database"
+	"github.com/jqwez/resume_slides/controller"
+	"github.com/jqwez/resume_slides/dao"
+	"github.com/jqwez/resume_slides/services/database"
 )
 
 func main() {

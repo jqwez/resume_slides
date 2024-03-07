@@ -1,9 +1,9 @@
 package slideshow
 
 import (
-	"main/dao"
-	"main/services/database"
-	"main/services/storage"
+	"github.com/jqwez/resume_slides/dao"
+	"github.com/jqwez/resume_slides/services/database"
+	"github.com/jqwez/resume_slides/services/storage"
 )
 
 type ShowService interface {
