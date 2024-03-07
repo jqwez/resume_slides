@@ -27,6 +27,14 @@ func NewSlideShowService(db database.DBService, store storage.StorageService) *S
 	}
 }
 
+func (s *SlideShowService) GetDb() database.DBService {
+	return s.Database
+}
+
+func (s *SlideShowService) GetStore() storage.StorageService {
+	return s.Storage
+}
+
 func (s *SlideShowService) GetShowById(id int) (SlideShowDTO, error) {
 	return SlideShowDTO{}, nil
 }

@@ -1,11 +1,21 @@
 package slideshow
 
-import "main/dao"
+import (
+	"main/dao"
+	"main/services/database"
+	"main/services/storage"
+)
 
 type ShowService interface {
+	ServiceHolder
 	Getter
 	Saver
 	Deleter
+}
+
+type ServiceHolder interface {
+	GetDb() database.DBService
+	GetStore() storage.StorageService
 }
 
 type Getter interface {

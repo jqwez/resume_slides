@@ -27,6 +27,16 @@ func TestNewSlideShowService(t *testing.T) {
 	t.Log(slide)
 }
 
+func TestGetDb(t *testing.T) {
+	db := service.GetDb()
+	if !errors.Is(db.GetConnection().Ping(), dbService.GetConnection().Ping()) {
+		t.Fatal("Somehow not same")
+	}
+}
+
+func TestGetStore(t *testing.T) {
+	_ = service.GetStore()
+}
 func TestGetSlideById(t *testing.T) {
 	_, err := service.GetSlideById(553434)
 	if err == nil {
@@ -39,11 +49,11 @@ func TestSaveNewSlide(t *testing.T) {
 	slide, err := service.SaveNewSlide("test_slide", []byte{})
 	handleGetError(err)
 	_ = slide
-	//_, err = service.GetSlideById(slide.ID)
-	/*handleGetError(err)
+	getSlide, err := service.GetSlideById(slide.ID)
+	handleGetError(err)
 	if slide.ID != getSlide.ID {
 		t.Fatal("Mismatch Id")
-	}*/
+	}
 }
 
 func handleGetError(err error) {

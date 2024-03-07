@@ -1,7 +1,9 @@
 package controller
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"log"
 	"main/services/database"
 	"main/services/slideshow"
@@ -27,7 +29,7 @@ func NewRouter(db database.DBService, store storage.StorageService) *Router {
 func (r *Router) RegisterRoutes() {
 	http.HandleFunc("/", r.HandleGetHome)
 	http.HandleFunc("/ws", HandleSocket)
-	//	http.HandleFunc("/blob/{blobName}", r.HandleImageBlob)
+	http.HandleFunc("/blob/{blobName}", r.HandleImageBlob)
 	//	http.HandleFunc("/slideshow/{SlideShowId}", r.HandleGetSlideShowData)
 	//	http.HandleFunc("/newslideshow", r.HandleNewSlideShow)
 	r.ServeStatic()
@@ -51,27 +53,27 @@ func (r *Router) HandleGetHome(w http.ResponseWriter, req *http.Request) {
 	http.ServeFile(w, req, fmt.Sprintf("%s/index.html", r.staticDir))
 }
 
-/*
-	func (r *Router) HandleImageBlob(w http.ResponseWriter, req *http.Request) {
-		blobName := req.PathValue("blobName")
-		containerClient, _ := r.GetBlobConnection()
-		blob, err := r.GetBlobByName(containerClient, blobName)
-		if err != nil {
-			http.Error(w, "Error getting blob", http.StatusInternalServerError)
-			return
-		}
-		reader := bytes.NewReader(blob)
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET")
-		w.Header().Set("Content-Type", "image/jpg")
-		w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=%s", blobName))
-		_, err = io.Copy(w, reader)
-		if err != nil {
-			http.Error(w, "Error serving image", http.StatusInternalServerError)
-			return
-		}
+func (r *Router) HandleImageBlob(w http.ResponseWriter, req *http.Request) {
+	blobName := req.PathValue("blobName")
+	client := r.slideshowService.GetStore()
+	blob, err := client.GetBlob(blobName)
+	if err != nil {
+		http.Error(w, "Error getting blob", http.StatusInternalServerError)
+		return
 	}
+	reader := bytes.NewReader(blob)
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Methods", "GET")
+	w.Header().Set("Content-Type", "image/jpg")
+	w.Header().Set("Content-Disposition", fmt.Sprintf("inline; filename=%s", blobName))
+	_, err = io.Copy(w, reader)
+	if err != nil {
+		http.Error(w, "Error serving image", http.StatusInternalServerError)
+		return
+	}
+}
 
+/*
 	func (r *Router) HandleGetSlideShowData(w http.ResponseWriter, req *http.Request) {
 		SlideShowId := req.PathValue("SlideShowId")
 		log.Println("Fetching slideshow: ", SlideShowId)

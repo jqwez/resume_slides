@@ -46,12 +46,14 @@ func (s *SlidePosition) Migrate(db *sql.DB) error {
 		slideshow_id INT,
 		slide_id INT,
 		position INT,
-	)
 		FOREIGN KEY (slideshow_id) REFERENCES slideshows(id),
 		FOREIGN KEY (slide_id) REFERENCES slides(id)
 	);
 	`
 	_, err := db.Exec(migrationSQL)
+	if err != nil {
+		log.Fatal(err)
+	}
 	return err
 }
 
