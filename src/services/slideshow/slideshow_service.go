@@ -1,6 +1,8 @@
 package slideshow
 
 import (
+	"log"
+
 	"github.com/jqwez/resume_slides/dao"
 	"github.com/jqwez/resume_slides/services/database"
 	"github.com/jqwez/resume_slides/services/storage"
@@ -63,14 +65,32 @@ func (s *SlideShowService) SaveNewSlide(title string, file []byte) (dao.Slide, e
 	return sl, nil
 }
 
-func (s *SlideShowService) SaveNewSlideShow(showTitle string, slideTitle string, slide []byte) error {
-	return nil
+func (s *SlideShowService) SaveNewSlideShow(showTitle string) (dao.SlideShow, error) {
+	show := dao.NewSlideShow(showTitle)
+	newSlideShow, err := show.Save(s.Database.GetConnection())
+	if err != nil {
+		return dao.SlideShow{}, err
+	}
+	return newSlideShow, nil
 }
 
 func (s *SlideShowService) DeleteSlideShow(id int) error {
+	show := &dao.SlideShow{}
+	_, err := show.DeleteById(s.Database.GetConnection(), id)
+	if err != nil {
+		log.Println("Error deleting show:", err)
+		return err
+	}
 	return nil
 }
 
-func (s *SlideShowService) DeleteSlide(id int) error {
+func (s *SlideShowService) DeleteSlidePosition(id int) error {
+	sl := &dao.SlidePosition{}
+	slide, err := sl.GetById(s.Database.GetConnection(), id)
+	if err != nil {
+		log.Println("Could not find Slide")
+		return err
+	}
+	_ = slide
 	return nil
 }

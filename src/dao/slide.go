@@ -76,15 +76,23 @@ func (s *Slide) GetById(db *sql.DB, id int) (Slide, error) {
 }
 
 func (s *Slide) Save(db *sql.DB) (Slide, error) {
-	s.CreatedAt = time.Now()
 	query := `
 	INSERT INTO slides (title, url, created_at)
-	VALUES (@Title, @Url, @CreatedAt)`
+	VALUES (@Title, @Url, @CreatedAt);
+	SELECT SCOPE_IDENTITY();`
 	s.CreatedAt = time.Now()
-	result := db.QueryRow(query,
+	var id int64
+	err := db.QueryRow(query,
 		sql.Named("Title", s.Title),
 		sql.Named("Url", s.Url),
 		sql.Named("CreatedAt", s.CreatedAt),
-	)
-	return NewSlideFromRow(result)
+	).Scan(&id)
+	if err != nil {
+		return Slide{}, err
+	}
+	newSlide, err := s.GetById(db, int(id))
+	if err != nil {
+		return Slide{}, err
+	}
+	return newSlide, nil
 }

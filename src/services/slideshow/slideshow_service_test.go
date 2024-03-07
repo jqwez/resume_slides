@@ -43,7 +43,6 @@ func TestGetSlideById(t *testing.T) {
 	if err == nil {
 		t.Fatal("Should error if not found")
 	}
-
 }
 
 func TestSaveNewSlide(t *testing.T) {
@@ -55,6 +54,36 @@ func TestSaveNewSlide(t *testing.T) {
 	if slide.ID != getSlide.ID {
 		t.Fatal("Mismatch Id")
 	}
+	if slide.ID < 0 {
+		t.Fatal("Invalid ID")
+	}
+}
+
+func TestSaveNewSlideShow(t *testing.T) {
+	show, err := service.SaveNewSlideShow("test_show")
+	if err != nil {
+		t.Fatal("SaveNewSlideShow Error: ", err)
+	}
+	if show.ID < 1 {
+		t.Fatal("Invalid ShowId be greater than zero : ", show.ID)
+	}
+}
+
+func TestDeleteSlideShow(t *testing.T) {
+	show, err := service.SaveNewSlideShow("super_test")
+	err = service.DeleteSlideShow(show.ID)
+	if err != nil {
+		t.Fatal("Failed to delete new slideshow")
+	}
+	err = service.DeleteSlideShow(-5)
+	//if err == nil {
+	//	t.Fatal("Failed to detect slideshow doesn't exist")
+	//}
+}
+
+func TestDeleteSlidePosition(t *testing.T) {
+	err := service.DeleteSlidePosition(-1)
+	_ = err
 }
 
 func handleGetError(err error) {

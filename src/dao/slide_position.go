@@ -65,3 +65,11 @@ func (s *SlidePosition) GetAll(db *sql.DB) ([]SlidePosition, error) {
 	}
 	return NewSlidePositionsFromRows(rows)
 }
+
+func (s *SlidePosition) GetById(db *sql.DB, id int) (SlidePosition, error) {
+	query := "SELECT * FROM slide_positions WHERE id=@Id"
+	row := db.QueryRow(query,
+		sql.Named("Id", id),
+	)
+	return NewSlidePositionFromRow(row)
+}

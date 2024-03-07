@@ -24,11 +24,11 @@ type Getter interface {
 }
 
 type Saver interface {
-	SaveNewSlideShow(showTitle string, slideTitle string, slide []byte) error
+	SaveNewSlideShow(showTitle string) (dao.SlideShow, error)
 	SaveNewSlide(slideTitle string, slide []byte) (dao.Slide, error)
 }
 
 type Deleter interface {
 	DeleteSlideShow(id int) error
-	DeleteSlide(id int) error
+	DeleteSlidePosition(id int) error
 }
