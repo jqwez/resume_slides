@@ -4,19 +4,25 @@ import Admin from "./pages/Admin";
 import NewSlideShow from './pages/NewSlideShow';
 import SlideShows from './pages/SlideShows';
 import { JSXElement, createSignal, onMount } from 'solid-js';
-import { useStoredPage } from './hooks/useStoredPage';
+import { useStoredPage } from './hooks/useNavigator';
+import { useListenForAdmin } from './hooks/useGoToAdmin';
+import NewSlide from './pages/NewSlide';
+import AllSlides from './pages/AllSlides';
 
 
 export type Navigator = (dest: string) => void;
 
 function App() {
-  const {getPage, setPage} = useStoredPage();
-  const [currentPage, setCurrentPage] = createSignal<JSXElement>(<SlideShow navigate={navigate} />);
+  useListenForAdmin(()=>navigate("slideshowadmin"))
+  const {getStoredPage, setStoredPage} = useStoredPage();
+  const [currentPage, setCurrentPage] = createSignal<JSXElement>(<SlideShow />);
   const pages: Record<string, JSXElement> = {
-    "slideshow": <SlideShow navigate={navigate} />,
+    "slideshow": <SlideShow />,
     "slideshowadmin": <Admin navigate={navigate} />,
     "slideshows": <SlideShows navigate={navigate} />,
     "newslideshow": <NewSlideShow navigate={navigate} />,
+    "newslide": <NewSlide navigate={navigate} />,
+    "allslides": <AllSlides navigate={navigate} />,
   }
   
   function navigate(dest: string) {
@@ -25,11 +31,11 @@ function App() {
       console.log("Not a destination");
       return
     }
-    setPage(dest);
+    setStoredPage(dest);
     setCurrentPage(pages[dest]);
   }
   onMount(()=> {
-    const page = getPage();
+    const page = getStoredPage();
     console.log(page)
     if (page != undefined) {
       navigate(page)

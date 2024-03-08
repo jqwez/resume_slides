@@ -1,19 +1,16 @@
-import { Suspense, createResource, createSignal,  onMount } from 'solid-js'
+import { Suspense, createResource, createSignal } from 'solid-js'
 import './Slide.css'
 
 export type SlideData = {
-  slide: {
     id: number,
     title: string,
     url: string,
-    slideshow_id: number,
     created_at: string,
-  },
-  position: number,
+    position: number,
 }
 
 type SlideProps = {
-  SlideData: SlideData;
+  slide: SlideData;
 }
 const getSlide = async (_url: string) => {
     const resp = await fetch(_url,{
@@ -24,7 +21,7 @@ const getSlide = async (_url: string) => {
     }
   
 function Slide(props: SlideProps) {
-  const url = `http://127.0.0.1:8000/blob/${props.SlideData.slide.url}`;
+  const url = `http://127.0.0.1:8000/api/blob/${props.slide.url}`;
   const [imageSrc, setImageSrc] = createSignal<string>()
   setImageSrc(url)
   const [slide] = createResource(imageSrc, getSlide)

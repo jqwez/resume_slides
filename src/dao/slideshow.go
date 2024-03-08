@@ -21,6 +21,21 @@ func NewSlideShowFromRow(row *sql.Row) (SlideShow, error) {
 	return show, err
 }
 
+func NewSlideShowsFromRows(rows *sql.Rows) ([]SlideShow, error) {
+	var slideshows []SlideShow
+	for rows.Next() {
+		var s SlideShow
+		if err := rows.Scan(&s.ID, &s.Title, &s.CreatedAt); err != nil {
+			return nil, err
+		}
+		slideshows = append(slideshows, s)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return slideshows, nil
+}
+
 func (s *SlideShow) Migrate(db *sql.DB) error {
 	migrationSQL := `
 	IF OBJECT_ID('slideshows', 'U') IS NULL
@@ -32,6 +47,16 @@ func (s *SlideShow) Migrate(db *sql.DB) error {
 	`
 	_, err := db.Exec(migrationSQL)
 	return err
+}
+
+func (*SlideShow) GetAll(db *sql.DB) ([]SlideShow, error) {
+	query := "SELECT * FROM slideshows"
+	result, err := db.Query(query)
+	if err != nil {
+		return nil, err
+	}
+	return NewSlideShowsFromRows(result)
+
 }
 
 func (*SlideShow) GetById(db *sql.DB, id int) (SlideShow, error) {

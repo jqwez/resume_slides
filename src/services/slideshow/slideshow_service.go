@@ -37,12 +37,36 @@ func (s *SlideShowService) GetStore() storage.StorageService {
 	return s.Storage
 }
 
-func (s *SlideShowService) GetShowById(id int) (SlideShowDTO, error) {
-	return SlideShowDTO{}, nil
+func (s *SlideShowService) GetAllShows() ([]SlideShowDTO, error) {
+	sh := &dao.SlideShow{}
+	slideshows, err := sh.GetAll(s.Database.GetConnection())
+
+	if err != nil {
+		return nil, err
+	}
+	dtos := []SlideShowDTO{}
+	for _, show := range slideshows {
+		dtos = append(dtos, SlideShowDTO{&show, nil})
+	}
+	return dtos, nil
 }
 
-func (s *SlideShowService) GetSlideById(id int) (dao.Slide, error) {
+func (s *SlideShowService) GetShowById(id int) (SlideShowDTO, error) {
+	return SlideShowDTO{SlideShow: &dao.SlideShow{}, Slides: []*dao.Slide{&dao.Slide{Url: "cat.jpg"}, &dao.Slide{Url: "cat.jpg"}}}, nil
+}
+
+func (s *SlideShowService) GetAllSlides() (*SlideShowDTO, error) {
 	sl := dao.Slide{}
+	slides, err := sl.GetAll(s.Database.GetConnection())
+	if err != nil {
+		return &SlideShowDTO{}, err
+	}
+	return NewSlideShowDTO(nil, slides), nil
+
+}
+
+func (s *SlideShowService) GetSlideById(id int) (*dao.Slide, error) {
+	sl := &dao.Slide{}
 	slide, err := sl.GetById(s.Database.GetConnection(), id)
 	if err != nil {
 		return slide, err
@@ -50,17 +74,17 @@ func (s *SlideShowService) GetSlideById(id int) (dao.Slide, error) {
 	return slide, nil
 }
 
-func (s *SlideShowService) SaveNewSlide(title string, file []byte) (dao.Slide, error) {
-	sl := dao.Slide{Title: title}
+func (s *SlideShowService) SaveNewSlide(title string, file []byte) (*dao.Slide, error) {
+	sl := &dao.Slide{Title: title}
 	url, err := s.Storage.SaveBlob(file)
 	if err != nil {
-		return dao.Slide{}, err
+		return &dao.Slide{}, err
 	}
 	sl.Url = url
 	sl, err = sl.Save(s.Database.GetConnection())
 	if err != nil {
 		s.Storage.DeleteBlob(url)
-		return dao.Slide{}, err
+		return &dao.Slide{}, err
 	}
 	return sl, nil
 }

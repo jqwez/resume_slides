@@ -22,16 +22,16 @@ func NewSlide(title string, url string) *Slide {
 	}
 }
 
-func NewSlideFromRow(row *sql.Row) (Slide, error) {
-	slide := Slide{}
+func NewSlideFromRow(row *sql.Row) (*Slide, error) {
+	slide := &Slide{}
 	err := row.Scan(&slide.ID, &slide.Title, &slide.Url, &slide.CreatedAt)
 	return slide, err
 }
 
-func NewSlidesFromRows(rows *sql.Rows) ([]Slide, error) {
-	var slides []Slide
+func NewSlidesFromRows(rows *sql.Rows) ([]*Slide, error) {
+	var slides []*Slide
 	for rows.Next() {
-		var slide Slide
+		slide := &Slide{}
 		if err := rows.Scan(&slide.ID, &slide.Title, &slide.Url, &slide.CreatedAt); err != nil {
 			return nil, err
 		}
@@ -57,7 +57,7 @@ func (s *Slide) Migrate(db *sql.DB) error {
 	return err
 }
 
-func (s *Slide) GetAll(db *sql.DB) ([]Slide, error) {
+func (s *Slide) GetAll(db *sql.DB) ([]*Slide, error) {
 	sql := "SELECT * FROM slides"
 	rows, err := db.Query(sql)
 	if err != nil {
@@ -67,7 +67,7 @@ func (s *Slide) GetAll(db *sql.DB) ([]Slide, error) {
 	return NewSlidesFromRows(rows)
 }
 
-func (s *Slide) GetById(db *sql.DB, id int) (Slide, error) {
+func (s *Slide) GetById(db *sql.DB, id int) (*Slide, error) {
 	query := "SELECT * FROM slides WHERE id=@Id"
 	result := db.QueryRow(query,
 		sql.Named("Id", id),
@@ -75,7 +75,7 @@ func (s *Slide) GetById(db *sql.DB, id int) (Slide, error) {
 	return NewSlideFromRow(result)
 }
 
-func (s *Slide) Save(db *sql.DB) (Slide, error) {
+func (s *Slide) Save(db *sql.DB) (*Slide, error) {
 	query := `
 	INSERT INTO slides (title, url, created_at)
 	VALUES (@Title, @Url, @CreatedAt);
@@ -88,11 +88,11 @@ func (s *Slide) Save(db *sql.DB) (Slide, error) {
 		sql.Named("CreatedAt", s.CreatedAt),
 	).Scan(&id)
 	if err != nil {
-		return Slide{}, err
+		return &Slide{}, err
 	}
 	newSlide, err := s.GetById(db, int(id))
 	if err != nil {
-		return Slide{}, err
+		return &Slide{}, err
 	}
 	return newSlide, nil
 }

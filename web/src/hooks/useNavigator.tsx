@@ -7,5 +7,5 @@ export function useStoredPage() {
     localStorage.setItem("stored-page", page);
 }
  
-  return {getPage: getPage, setPage: setPage}
+  return {getStoredPage: getPage, setStoredPage: setPage}
 }

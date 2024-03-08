@@ -20,12 +20,14 @@ type ServiceHolder interface {
 
 type Getter interface {
 	GetShowById(id int) (SlideShowDTO, error)
-	GetSlideById(id int) (dao.Slide, error)
+	GetSlideById(id int) (*dao.Slide, error)
+	GetAllShows() ([]SlideShowDTO, error)
+	GetAllSlides() (*SlideShowDTO, error)
 }
 
 type Saver interface {
 	SaveNewSlideShow(showTitle string) (dao.SlideShow, error)
-	SaveNewSlide(slideTitle string, slide []byte) (dao.Slide, error)
+	SaveNewSlide(slideTitle string, slide []byte) (*dao.Slide, error)
 }
 
 type Deleter interface {

@@ -6,7 +6,7 @@ type ThumbnailProps = {
 }
 
 function Thumbnail(props: ThumbnailProps) {
-  const url = `http://127.0.0.1:8000/blob/cat.jpg`;
+  const url = `http://127.0.0.1:8000/api/blob/cat.jpg`;
   const [imageSrc, setImageSrc] = createSignal<string>("")
   const getCat = async () => {
     const req = await fetch(url,
