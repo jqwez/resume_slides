@@ -79,6 +79,7 @@ func (a *AzureBlobService) connect() (*azblob.Client, error) {
 	handleError(err)
 	a.Client = client
 	log.Println("Connected to Azure Blob Service at:", a.Config.BaseURL, a.Config.AccountName, a.Config.ContainerName)
+	// SaveCat(a.Client)
 	return a.Client, nil
 }
 
@@ -152,7 +153,6 @@ func handleError(err error) {
 	}
 }
 
-/*
 func SaveCat(client *azblob.Client) (string, error) {
 	blob, err := os.Open("../static/cat.jpg")
 	if err != nil {
@@ -164,7 +164,7 @@ func SaveCat(client *azblob.Client) (string, error) {
 	blobName := "cat.jpg"
 	resp, err := client.UploadStream(
 		context.TODO(),
-		"",
+		"test-slides",
 		blobName,
 		blob,
 		&azblob.UploadStreamOptions{
@@ -174,4 +174,3 @@ func SaveCat(client *azblob.Client) (string, error) {
 	log.Println(resp)
 	return blobName, nil
 }
-*/

@@ -16,12 +16,13 @@ function AllSlides(props: AllSlidesProps) {
     console.log(data)
     setSlides(data.slides)
   }
-  const [slides, setSlides] = createSignal(null)
+  const [slides, setSlides] = createSignal()
   onMount(()=>getAllSlides())
   console.log(slides())
   const SlideElements = () => {
-    if (slides()) {
-      return slides().map(<SlideRow/>)
+    const _slides = slides() as Array<Object>;
+    if (_slides != null) {
+      return _slides.map(_ => <SlideRow/>)
     }
   }
   return (

@@ -1,6 +1,5 @@
 import { Navigator } from "../App";
 import "./AdminNav.css"
-import { onMount, createSignal } from "solid-js";
 
 type AdminNavProps = {
   navigate: Navigator

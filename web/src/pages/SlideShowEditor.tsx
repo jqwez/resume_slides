@@ -29,12 +29,13 @@ function SlideShowEditor(props: SlideShowEditorProps) {
     });
     const data = await res.json()
     setSlideShowData(data);
+    console.log(slideShowData());
   }
   onMount(()=>{
     getSlideShowData()
   })
 
-  const bunch = [0, 1, 2, 3, 4, 5, 7, 21, 1, 1, 3].map(el=><Thumbnail imageUrl='cat.jpg'/>)
+  const bunch = [0, 1, 2, 3, 4, 5, 7, 21, 1, 1, 3].map(_=><Thumbnail imageUrl='cat.jpg'/>)
   return (
     <> 
     <AdminNav navigate={props.navigate} />

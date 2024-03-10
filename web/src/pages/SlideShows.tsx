@@ -2,8 +2,6 @@ import './SlideShows.css'
 import { Navigator } from '../App'
 const Thumbnail = lazy(()=> import('../components/Thumbnail'))
 import AdminNav from "../components/AdminNav"
-import { SlideShowData } from './SlideShow'
-import { SlideData } from '../components/Slide'
 import { lazy } from 'solid-js'
 
 type SlideShowsProps = {
