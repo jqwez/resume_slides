@@ -2,11 +2,11 @@ name Azure Static Web Apps CI/CD
 on:
   push:
     branches:
-      - refactor
+      - main
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
-      - refactor
+      - main
 
 jobs:
   build_and_deploy_job:
@@ -23,7 +23,7 @@ jobs:
       - name: Set Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: 14
+          node-version: 18
 
       - name: Install Dependencies
         run: npm install
