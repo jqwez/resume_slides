@@ -32,7 +32,17 @@ jobs:
           api_location: "" # Api source code path - optional
           output_location: "/dist" # Built app content directory - optional
           ###### End of Repository/Build Configurations ######
+      - name: Set Node.js version
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14
 
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+        continue-on-error: true
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
     runs-on: ubuntu-latest
