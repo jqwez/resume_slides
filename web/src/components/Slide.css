@@ -7,3 +7,8 @@
 ._slide-div {
   user-select: none;
 }
+
+.slide-placeholder {
+  height: 400;
+  width: 600;
+}

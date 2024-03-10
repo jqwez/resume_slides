@@ -1,40 +1,36 @@
-import { createSignal,  onMount } from 'solid-js'
-import './SlideShow.css'
+import { Suspense, createResource, createSignal } from 'solid-js'
+import './Slide.css'
 
-
-export type SlideType = {
-  id: number,
-  title: string,
-  url: string,
-  slideshow_id: number,
-  position: number,
-  created_at: string,
+export type SlideData = {
+    id: number,
+    title: string,
+    url: string,
+    created_at: string,
+    position: number,
 }
 
 type SlideProps = {
-  blobURL: string,
-  num: any;
+  slide: SlideData;
 }
-
-function Slide(props: SlideProps) {
-  const [imageSrc, setImageSrc] = createSignal<string>("")
-  const getCat = async () => {
-    const req = await fetch(props.blobURL,
-    {
+const getSlide = async (_url: string) => {
+    const resp = await fetch(_url,{
       method: "GET",
-      redirect: "follow"
-    });
-    const blob = await req.blob()
-    setImageSrc(URL.createObjectURL(blob))
-  }
+      redirect: "follow",})
+    const blob = await resp.blob()
+    return URL.createObjectURL(blob)
+    }
   
-  onMount(()=> {
-    getCat();
-  });
+function Slide(props: SlideProps) {
+  const url = `http://127.0.0.1:8000/api/blob/${props.slide.url}`;
+  const [imageSrc, setImageSrc] = createSignal<string>()
+  setImageSrc(url)
+  const [slide] = createResource(imageSrc, getSlide)
 
   return (
     <div class="_slide-div">
-    <img class="_slide" src={imageSrc()} height="400" width="600"/>
+    <Suspense fallback={<div class="slide-placeholder">Loading...</div>}>
+    <img class="_slide" src={slide()} height="400" width="600"/> 
+    </Suspense>
     </div>
   )
 }
