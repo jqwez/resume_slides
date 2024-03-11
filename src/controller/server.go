@@ -18,7 +18,7 @@ func NewServer() *Server {
 	blobService := storage.MustNewAzureBlobService(storage.MustAzureBlogConfigFromEnv())
 	return &Server{
 		Router: NewRouter(dbService, blobService),
-		port:   ":8000",
+		port:   ":80",
 	}
 }
 

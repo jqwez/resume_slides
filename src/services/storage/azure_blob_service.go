@@ -14,7 +14,6 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/joho/godotenv"
-	"golang.org/x/net/context"
 )
 
 type AzureBlobConfig struct {
@@ -51,7 +50,7 @@ func MustNewAzureBlobService(config *AzureBlobConfig) *AzureBlobService {
 	}
 	service.Client = client
 	err = service.CreateContainerIfNotExist(
-		"test-slides",
+		"resumeslides",
 	)
 	if err != nil {
 		log.Println("Error Creating Container")
@@ -114,7 +113,7 @@ func (a *AzureBlobService) SaveBlob(file []byte) (string, error) {
 	blobContentReader := bytes.NewReader(file)
 
 	resp, err := a.Client.UploadStream(
-		context.TODO(),
+		context.Background(),
 		a.Config.ContainerName,
 		blobName,
 		blobContentReader,
@@ -127,7 +126,7 @@ func (a *AzureBlobService) SaveBlob(file []byte) (string, error) {
 }
 
 func (a *AzureBlobService) DeleteBlob(name string) (bool, error) {
-	resp, err := a.Client.DeleteBlob(context.TODO(), a.Config.ContainerName, name, nil)
+	resp, err := a.Client.DeleteBlob(context.Background(), a.Config.ContainerName, name, nil)
 	if err != nil {
 		return false, err
 	}
@@ -168,8 +167,8 @@ func SaveCat(client *azblob.Client) (string, error) {
 	}
 	blobName := "cat.jpg"
 	resp, err := client.UploadStream(
-		context.TODO(),
-		"test-slides",
+		context.Background(),
+		"resumeslides",
 		blobName,
 		blob,
 		&azblob.UploadStreamOptions{
