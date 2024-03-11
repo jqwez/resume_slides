@@ -25,8 +25,8 @@ jobs:
         with:
           node-version: 18
       - name: Set environment variables for Vite
-        run: echo "VITE_container_ip=${{ secrets.container_ip }}
-        
+        run: echo "VITE_container_ip=${{ secrets.container_ip }}" >> $GITHUB_ENV
+
       - name: Build
         run: npm run build
         continue-on-error: true
