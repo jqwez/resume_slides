@@ -3,6 +3,7 @@ import './SlideShow.css'
 import SlideButton, { ButtonDirection } from '../components/SlideButton'
 import Slide, { SlideData } from '../components/Slide'
 import { useSocket } from '../hooks/useSocket'
+import { useEnvironmentVariable } from '../hooks/useEnvironment'
 
 export type SlideShowData = {
   slideshow_data: {
@@ -28,7 +29,8 @@ function SlideShow() {
   const [slideShowPosition, setSlideShowPosition] = createSignal<number>(0);
   const [slideShowState, setSlideShowState] = createSignal<ShowState|null>(null)
   const getSlideShowData = async () => {
-    const res = await fetch("http://localhost:8000/api/slideshow",
+    const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
+    const res = await fetch(`${baseUrl}/api/slideshow`,
     {
       method: "GET",
       redirect: "follow"

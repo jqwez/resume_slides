@@ -1,5 +1,6 @@
 import { Suspense, createResource, createSignal } from 'solid-js'
 import './Slide.css'
+import { useEnvironmentVariable } from '../hooks/useEnvironment';
 
 export type SlideData = {
     id: number,
@@ -21,7 +22,8 @@ const getSlide = async (_url: string) => {
     }
   
 function Slide(props: SlideProps) {
-  const url = `http://127.0.0.1:8000/api/blob/${props.slide.url}`;
+  const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
+  const url = `${baseUrl}/api/blob/${props.slide.url}`;
   const [imageSrc, setImageSrc] = createSignal<string>()
   setImageSrc(url)
   const [slide] = createResource(imageSrc, getSlide)

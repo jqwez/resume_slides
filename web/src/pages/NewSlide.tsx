@@ -1,5 +1,6 @@
 import { Navigator } from '../App'
 import AdminNav from '../components/AdminNav'
+import { useEnvironmentVariable } from '../hooks/useEnvironment'
 import './NewSlide.css'
 
 type NewSlideProps = {
@@ -11,7 +12,8 @@ function NewSlide(props: NewSlideProps) {
     formData.append('file', file)
     formData.append('filet', fileT)
     formData.append('show', show)
-    fetch("http://localhost:8000/api/admin/slide/new", {
+    const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
+    fetch(`${baseUrl}/api/admin/slide/new`, {
       method: "POST",
       body: formData
     })

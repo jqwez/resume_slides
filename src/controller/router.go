@@ -27,7 +27,7 @@ func NewRouter(db database.DBService, store storage.StorageService) *Router {
 func (r *Router) RegisterRoutes() {
 	api.NewAdminApi(r.slideshowService).RegisterRoutes()
 	api.NewApi(r.slideshowService).RegisterRoutes()
-	NewStaticController("/static").RegisterRoutes()
+	//NewStaticController("/static").RegisterRoutes()
 	NewSocketHub().RegisterRoutes()
 	http.HandleFunc("/", r.HandleGetHome)
 }
