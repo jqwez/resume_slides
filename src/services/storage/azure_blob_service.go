@@ -14,6 +14,7 @@ import (
 	"github.com/Azure/azure-sdk-for-go/sdk/azidentity"
 	"github.com/Azure/azure-sdk-for-go/sdk/storage/azblob"
 	"github.com/joho/godotenv"
+	"golang.org/x/net/context"
 )
 
 type AzureBlobConfig struct {
@@ -61,10 +62,12 @@ func MustNewAzureBlobService(config *AzureBlobConfig) *AzureBlobService {
 func (a *AzureBlobService) CreateContainerIfNotExist(containerName string) error {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	handleError(err)
-	client, err := azblob.NewClient(fmt.Sprintf("%s/%s", a.Config.BaseURL, a.Config.AccountName), cred, nil)
+	// fmt.Sprintf("%s/%s", a.Config.BaseURL, a.Config.AccountName)
+	url := "https://resumeslidesblob.blob.core.windows.net/"
+	client, err := azblob.NewClient(url, cred, nil)
 	handleError(err)
 	_, err = client.CreateContainer(
-		context.TODO(),
+		context.Background(),
 		containerName,
 		&azblob.CreateContainerOptions{
 			Metadata: map[string]*string{"hello": to.Ptr("world")},
@@ -75,10 +78,12 @@ func (a *AzureBlobService) CreateContainerIfNotExist(containerName string) error
 func (a *AzureBlobService) connect() (*azblob.Client, error) {
 	cred, err := azidentity.NewDefaultAzureCredential(nil)
 	handleError(err)
-	client, err := azblob.NewClient(fmt.Sprintf("%s/%s", a.Config.BaseURL, a.Config.AccountName), cred, nil)
+	// url := fmt.Sprintf("%s/%s", a.Config.BaseURL, a.Config.AccountName)
+	url := "https://resumeslidesblob.blob.core.windows.net/"
+	client, err := azblob.NewClient(url, cred, nil)
 	handleError(err)
 	a.Client = client
-	log.Println("Connected to Azure Blob Service at:", a.Config.BaseURL, a.Config.AccountName, a.Config.ContainerName)
+	log.Println("Connected to Azure Blob Service at:", url)
 	// SaveCat(a.Client)
 	return a.Client, nil
 }
