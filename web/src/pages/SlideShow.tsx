@@ -31,7 +31,7 @@ function SlideShow() {
   const getSlideShowData = async () => {
     const baseUrl = useEnvironmentVariable("container_ip");
     const url = baseUrl ? `https://${baseUrl}/api/slideshow` : `http://localhost:8000/api/slideshow`; 
-    const res = await fetch(`http://${baseUrl}/api/slideshow`,
+    const res = await fetch(url,
     {
       method: "GET",
       redirect: "follow"
