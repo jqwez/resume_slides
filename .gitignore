@@ -4,3 +4,5 @@ resume-slides
 __*
 .vscode
 static
+.env.production
+.env.dev

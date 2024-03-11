@@ -23,7 +23,7 @@ const getSlide = async (_url: string) => {
   
 function Slide(props: SlideProps) {
   const baseUrl = useEnvironmentVariable("container_ip")
-  const url = baseUrl ? `https://${baseUrl}/api/blob/${props.slide.url}` : `http://localhost:8000/api/blob/{props.slide.url}`;
+  const url = baseUrl ? `https://${baseUrl}/api/blob/${props.slide.url}` : `http://localhost:8000/api/blob/${props.slide.url}`;
   const [imageSrc, setImageSrc] = createSignal<string>()
   setImageSrc(url)
   const [slide] = createResource(imageSrc, getSlide)
