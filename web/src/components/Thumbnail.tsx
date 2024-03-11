@@ -8,8 +8,8 @@ type ThumbnailProps = {
 
 function Thumbnail(props: ThumbnailProps) {
   console.log(props);
-  const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
-  const url = `${baseUrl}/api/blob/cat.jpg`;
+  const baseUrl = useEnvironmentVariable("container_ip", "127.0.0.1:8000")
+  const url = `http://${baseUrl}/api/blob/cat.jpg`;
   const [imageSrc, setImageSrc] = createSignal<string>("")
   const getCat = async () => {
     const req = await fetch(url,

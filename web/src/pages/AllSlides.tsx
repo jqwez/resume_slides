@@ -8,8 +8,8 @@ type AllSlidesProps = {
 }
 function AllSlides(props: AllSlidesProps) {
   const getAllSlides = async () => {
-    const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
-    const res = await fetch(`${baseUrl}/api/admin/slide/all`,
+    const baseUrl = useEnvironmentVariable("container_ip", "127.0.0.1:8000")
+    const res = await fetch(`http://${baseUrl}/api/admin/slide/all`,
     {
       method: "GET",
       redirect: "follow"

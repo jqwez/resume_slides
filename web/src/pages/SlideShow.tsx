@@ -29,8 +29,8 @@ function SlideShow() {
   const [slideShowPosition, setSlideShowPosition] = createSignal<number>(0);
   const [slideShowState, setSlideShowState] = createSignal<ShowState|null>(null)
   const getSlideShowData = async () => {
-    const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
-    const res = await fetch(`${baseUrl}/api/slideshow`,
+    const baseUrl = useEnvironmentVariable("container_ip", "127.0.0.1:8000")
+    const res = await fetch(`http://${baseUrl}/api/slideshow`,
     {
       method: "GET",
       redirect: "follow"

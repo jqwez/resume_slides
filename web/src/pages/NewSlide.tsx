@@ -12,8 +12,8 @@ function NewSlide(props: NewSlideProps) {
     formData.append('file', file)
     formData.append('filet', fileT)
     formData.append('show', show)
-    const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
-    fetch(`${baseUrl}/api/admin/slide/new`, {
+    const baseUrl = useEnvironmentVariable("container_ip", "127.0.0.1:8000")
+    fetch(`http://${baseUrl}/api/admin/slide/new`, {
       method: "POST",
       body: formData
     })
