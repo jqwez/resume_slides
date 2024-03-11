@@ -12,8 +12,9 @@ function NewSlideShow(props: NewSlideShowProps) {
     formData.append('file', file)
     formData.append('filet', fileT)
     formData.append('show', show)
-    const baseUrl = useEnvironmentVariable("container_ip", "127.0.0.1:8000")
-    fetch(`http://${baseUrl}/newslideshow`, {
+    const baseUrl = useEnvironmentVariable("container_ip");
+    const url = baseUrl ? `https://${baseUrl}/newslideshow` : `http://localhost:8000/newslideshow`;
+    fetch(url, {
       method: "POST",
       body: formData
     })

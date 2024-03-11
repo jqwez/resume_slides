@@ -1,4 +1,4 @@
-export function useEnvironmentVariable(key: string, dev: string) {
+export function useEnvironmentVariable(key: string) {
   const envVar = import.meta.env[`VITE_${key}`];
-  return envVar ? envVar : dev;
+  return envVar
 }

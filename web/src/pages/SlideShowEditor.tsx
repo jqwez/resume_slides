@@ -23,8 +23,9 @@ type SlideShowData = {
 function SlideShowEditor(props: SlideShowEditorProps) {
   const [slideShowData, setSlideShowData] = createSignal<SlideShowData>();
   const getSlideShowData = async () => {
-    const baseUrl = useEnvironmentVariable("container_ip", "http://127.0.0.1:8000")
-    const res = await fetch(`${baseUrl}/admin/slideshows`,
+    const baseUrl = useEnvironmentVariable("container_ip");
+    const url = baseUrl ? `https://${baseUrl}/admin/slideshows` : `http://localhost:8000/api/admin/slideshows/all`;
+    const res = await fetch(url,
     {
       method: "GET",
       redirect: "follow"
